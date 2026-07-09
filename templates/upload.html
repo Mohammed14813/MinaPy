@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>رفع الملفات - MinaPy</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Tahoma', Arial, sans-serif;
+            background: #f0f2f5;
+        }
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+        }
+        .navbar h1 { font-size: 24px; }
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 0 20px;
+        }
+        .card {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .drop-zone {
+            border: 3px dashed #ddd;
+            border-radius: 15px;
+            padding: 50px;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        .drop-zone:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+        .drop-zone input[type="file"] {
+            display: none;
+        }
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 15px;
+        }
+        .btn:hover { background: #764ba2; }
+        .file-list {
+            margin-top: 20px;
+        }
+        .file-item {
+            background: #f8f9fa;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <h1>🐍 MinaPy</h1>
+        <div class="nav-links">
+            <a href="{{ url_for('dashboard') }}">لوحة التحكم</a>
+            <a href="{{ url_for('upload') }}">رفع ملف</a>
+            <a href="{{ url_for('logout') }}" style="color: #ff6b6b;">تسجيل خروج</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="card">
+            <h2 style="margin-bottom: 20px;">📤 رفع الملفات</h2>
+            <p style="color: #666; margin-bottom: 20px;">
+                الملفات المسموحة: .py, .txt, .json, .zip, requirements.txt
+            </p>
+            
+            <form action="{{ url_for('upload') }}" method="POST" enctype="multipart/form-data">
+                <div class="drop-zone" onclick="document.getElementById('fileInput').click()">
+                    <div style="font-size: 48px;">📁</div>
+                    <p>اضغط لاختيار الملفات أو اسحبها هنا</p>
+                    <input type="file" id="fileInput" name="files[]" multiple accept=".py,.txt,.json,.zip">
+                </div>
+                
+                <div id="fileList" class="file-list"></div>
+                
+                <button type="submit" class="btn">🚀 رفع الملفات</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('fileInput').addEventListener('change', function(e) {
+            const fileList = document.getElementById('fileList');
+            fileList.innerHTML = '';
+            for (let file of this.files) {
+                const div = document.createElement('div');
+                div.className = 'file-item';
+                div.textContent = `📄 ${file.name} (${(file.size / 1024).toFixed(2)} KB)`;
+                fileList.appendChild(div);
+            }
+        });
+    </script>
+</body>
+</html>
